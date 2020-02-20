@@ -1,0 +1,137 @@
+"""
+File: design1.txt
+Author: Nicholas Perry
+Date: 10/15/2019
+Section: 25
+E-mail: nperry2@umbc.edu
+Description: This program has the user buy a number of items of the users chooing, then bake the items.
+If the user is successful at running the bakery, then the user will be rewarded by being told they did good.
+If the user was not successful, then the user fails.
+"""
+# staring amount of cash
+STARTING_FUNDS = 80.0
+
+# Measuring scales
+CUPS_IN_GALLONS = 16
+TSP_IN_CUPS = 48
+
+# Store items are each of the 5 items able to be purchased
+# The indexing is consistent throughout
+STORE_ITEMS = ["flour", "eggs", "yeast", "butter", "milk"]
+# How store items are measured
+ITEMS_MEASUREMENTS = ["cups", "eggs", "tsp", "tbsp", "cups"]
+
+# These correspond to the index of each item in the list above
+FLOUR_INDEX = 0
+EGGS_INDEX = 1
+YEAST_INDEX = 2
+BUTTER_INDEX = 3
+MILK_INDEX = 4
+
+# Cost of each item of produce in each
+FLOUR_COST_PER_BAG = 2.5
+EGGS_COST_PER_CRATE = 1.9
+YEAST_COST_PER_BAG = 3.25
+BUTTER_COST_PER_PACK = 1.25
+MILK_COST_PER_JUG = 2.75
+# Each cost indexed in a list
+ITEMS_COST_PER_CONTAINER = [FLOUR_COST_PER_BAG, EGGS_COST_PER_CRATE, YEAST_COST_PER_BAG, BUTTER_COST_PER_PACK, MILK_COST_PER_JUG]
+
+# Amount of each produce in the pack someone buys it in
+CUPS_FLOUR_PER_BAG = 25.0
+EGGS_PER_CRATE = 24.0
+CUP_YEAST_PER_BAG = 6.0
+TBSP_BUTTER_PER_PACK = 64.0
+GALLONS_MILK_PER_JUG = 1.0
+# Amount in each pack indexed in a list
+ITEMS_AMOUNT_IN_PACK = [CUPS_FLOUR_PER_BAG, EGGS_PER_CRATE, (CUP_YEAST_PER_BAG * TSP_IN_CUPS), TBSP_BUTTER_PER_PACK, (GALLONS_MILK_PER_JUG * CUPS_IN_GALLONS)]
+
+# Amount of each produce required to bake completely
+FLOUR_REQUIRED = 48.0 + 112.5
+EGGS_REQUIRED = 12.0 + 60.0
+YEAST_REQUIRED = 39.0 + 50.0
+BUTTER_REQUIRED = 144.0
+MILK_REQUIRED = 18.0
+# Items required indexed in a list
+ITEMS_REQUIRED_TO_BAKE = [FLOUR_REQUIRED, EGGS_REQUIRED, YEAST_REQUIRED, BUTTER_REQUIRED, MILK_REQUIRED]
+
+# Every baking task that needs to be completed to finish successfully
+BAKING_TASKS = ["Begin the baguette dough", "Make the macarons", "make the croissants", "bake the baguettes"]
+# Total number of tasks that needs to be completed
+NUM_OF_ALL_TASKS = 4
+
+
+def prompt_user():
+    """
+    A series of print statements that use the constant values to prompt the user and tells them all the necessary items to purchase
+    :return: nothing
+    """
+
+
+def not_enough_print_out(num_items):
+    """
+    Loops through and prints off all the items in the list that did not have enough items bought
+    :param num_items: a list of the number of all the items bought
+    :return: Nothing
+    """
+
+
+def go_shopping():
+    """
+    prompts the user asking which items they want to buy and how many of each.
+    Calls check_items_enough() to validate there is enough of each item to begin baking
+    Calls is_valid_num() and is_valid_string() to make sure the user is inputting correct values
+    Calls not_enough_print_out() if there wasn't enough items bought
+    :return: number of store items or False if the user runs out of cash or did not buy enough
+    """
+
+
+def check_items_enough(shopping_cart):
+    """
+    determines if the list given is greater than or equal to the constant values in ITEMS_REQUIRED_TO_BAKE
+    :param shopping_cart: a list of numbers
+    :return: true if it has enough items and false if there is not
+    """
+
+
+def print_task_list(tasks_remaining):
+    """
+    prints the remaining tasks on the list given and numbering each item 1 to the end
+    :param tasks_remaining: the list given
+    :return: nothing
+    """
+
+
+def is_valid_string(index, tasks):
+    """
+    Validates that the variable given is in the list given
+    :param index: any variable given
+    :param tasks: any given list of items
+    :return: true if the variable is in the list, all else false
+    """
+
+
+def is_valid_num(num):
+    """
+    Determines if the integer given is positive or negative or zero
+    :param num: An integer
+    :return: true for positive, false for zero or below
+    """
+
+
+def bake():
+    """
+    Calls print_task_list() and makes the user bake items in the correct order
+    :return: Nothing
+    """
+
+
+if __name__ == '__main__':
+
+    prompt_user()
+    cart = go_shopping()
+    	 if cart:
+	     if check_items_enough(cart):
+	         print("Got Everything")
+	         bake()
+					    

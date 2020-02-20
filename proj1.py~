@@ -1,0 +1,223 @@
+"""
+FIle: proj1.py
+Author: Nicholas Perry
+Date: 10/19/2019
+Section: 25
+E-mail: nperry2@umbc.edu
+Description: This program has the user buy a number of items of the users choosing, then bake the items.
+If the user is successful at running the bakery, then the user will be rewarded by being told they did good.
+If the user was not successful, then the user fails.
+"""
+
+STARTING_FUNDS = 80.0
+
+# Measuring scales
+CUPS_IN_GALLONS = 16
+TSP_IN_CUPS = 48
+
+# Store items are each of the 5 items able to be purchased
+# The indexing is consistent throughout
+STORE_ITEMS = ["flour", "eggs", "yeast", "butter", "milk"]
+# How store items are measured
+ITEMS_MEASUREMENTS = ["cups", "eggs", "tsp", "tbsp", "cups"]
+# How store items come in containers
+ITEMS_CONTAINERS = ["bags", "crates", "bags", "packs", "jugs"]
+
+# These correspond to the index of each item in the list above
+FLOUR_INDEX = 0
+EGGS_INDEX = 1
+YEAST_INDEX = 2
+BUTTER_INDEX = 3
+MILK_INDEX = 4
+
+# Cost of each item of produce in each
+FLOUR_COST_PER_BAG = 2.5
+EGGS_COST_PER_CRATE = 1.9
+YEAST_COST_PER_BAG = 3.25
+BUTTER_COST_PER_PACK = 1.25
+MILK_COST_PER_JUG = 2.75
+# Each cost indexed in a list
+ITEMS_COST_PER_CONTAINER = [FLOUR_COST_PER_BAG, EGGS_COST_PER_CRATE, YEAST_COST_PER_BAG, BUTTER_COST_PER_PACK,
+                                                        MILK_COST_PER_JUG]
+
+# Amount of each produce in the pack someone buys it in
+CUPS_FLOUR_PER_BAG = 25.0
+EGGS_PER_CRATE = 24.0
+CUP_YEAST_PER_BAG = 6.0
+TBSP_BUTTER_PER_PACK = 64.0
+GALLONS_MILK_PER_JUG = 1.0
+# Amount in each pack indexed in a list
+ITEMS_AMOUNT_IN_PACK = [CUPS_FLOUR_PER_BAG, EGGS_PER_CRATE, (CUP_YEAST_PER_BAG * TSP_IN_CUPS),
+                                                TBSP_BUTTER_PER_PACK, (GALLONS_MILK_PER_JUG * CUPS_IN_GALLONS)]
+
+# Amount of each produce required to bake completely
+FLOUR_REQUIRED = 48.0 + 112.5
+EGGS_REQUIRED = 12.0 + 60.0
+YEAST_REQUIRED = 39.0 + 50.0
+BUTTER_REQUIRED = 144.0
+MILK_REQUIRED = 18.0
+# Items required indexed in a list
+ITEMS_REQUIRED_TO_BAKE = [FLOUR_REQUIRED, EGGS_REQUIRED, YEAST_REQUIRED, BUTTER_REQUIRED, MILK_REQUIRED]
+
+# Every baking task that needs to be completed to finish successfully
+BAKING_TASKS = ["Begin the baguette dough", "Make the macarons", "make the croissants", "bake the baguettes"]
+# Total number of tasks that needs to be completed
+NUM_OF_ALL_TASKS = 4
+
+
+def prompt_user():
+    """
+    A series of print statements that use the constant values to prompt the user and tells them \
+    all the necessary items to purchase
+    :return: nothing
+    """
+    print("Baker!  You must buy the following with $80: \n")
+    print("\tFor 300 croissants:")
+    print("\t\t48 cups of flour\n \t\t12 eggs\n \t\t144 tbsp of butter\n "
+          "\t\t39 tsp of yeast\n \t\t18 cups of milk\n")
+    print("\tFor 600 macarons: \n\t\t 60 eggs\n")
+    print("\tFor 100 baguettes:\n\t\t112.5 cups of flour\n\t\t50 tsp of yeast\n")
+    
+
+def not_enough_print_out(num_items):
+    """
+    Loops through and prints off all the items in the list that did not have enough items bought
+    :param num_items: a list of the number of all the items bought
+    :return: Nothing
+    """
+    for i in range(len(num_items)):
+        if num_items[i] < ITEMS_REQUIRED_TO_BAKE[i]:
+            print("You didn't buy enough ", STORE_ITEMS[i] + "!  We needed: %g more "
+                  % (ITEMS_REQUIRED_TO_BAKE[i] - num_items[i]) + ITEMS_MEASUREMENTS[i])
+
+    print("You did not buy enough ingredients to even begin baking. You are a failure of all sorts. Good day.")
+
+
+def go_shopping():
+    """
+
+    :return: number of store items
+    """
+    # These are the number of each of the 5 items able to be purchased, the index corresponds to the index in
+    # store_items
+    num_store_items = [0, 0, 0, 0, 0]
+    running_amount_of_cash = STARTING_FUNDS
+    
+    print("Welcome to the supermarket!")
+    item_selected = input("What would you like to purchase? (ENTER 'NOTHING' to leave store) ")
+
+    while item_selected != "NOTHING":
+        if is_valid_string(item_selected, STORE_ITEMS):
+            for i in range(len(ITEMS_CONTAINERS)):
+                if STORE_ITEMS[i] == item_selected:
+                    num_of_item = int(input("How many " + ITEMS_CONTAINERS[i] + " of " + item_selected + " would you like? "))
+            if is_valid_num(num_of_item):
+                for i in range(len(STORE_ITEMS)):
+                    if STORE_ITEMS[i] == item_selected:
+                        running_amount_of_cash -= ITEMS_COST_PER_CONTAINER[i] * num_of_item
+                        num_store_items[i] = num_of_item * ITEMS_AMOUNT_IN_PACK[i]
+                        if not running_amount_of_cash >= 0:
+                            print("You have run out of money!")
+                            not_enough_print_out(num_store_items)
+                            return False
+            else:
+                print("That is not a valid entry.")
+        else:
+            print("That is not a valid entry.")
+        item_selected = input("What would you like to purchase? (ENTER 'NOTHING' to leave store) ")
+    return num_store_items
+
+
+def check_items_enough(shopping_cart):
+    """
+    determines if the list given is greater than or equal to the constant values in ITEMS_REQUIRED_TO_BAKE
+    :param shopping_cart: a list of numbers
+    :return: true has enough items and false if there is not
+    """
+    is_enough_items = [False, False, False, False, False]
+    for i in range(len(shopping_cart)):
+        if shopping_cart[i] < ITEMS_REQUIRED_TO_BAKE[i]:
+            is_enough_items[i] = False
+        else:
+            is_enough_items[i] = True
+    is_enough = True
+    for i in range(len(is_enough_items)):
+        if not is_enough_items[i]:
+            print("You didn't buy enough ", STORE_ITEMS[i] + "!  We needed: %g more "
+                  % (ITEMS_REQUIRED_TO_BAKE[i] - shopping_cart[i]) + ITEMS_MEASUREMENTS[i])
+            is_enough = False
+    if not is_enough:
+        print("You did not buy enough ingredients to even begin baking. You are a failure of all sorts. Good day.")
+    return is_enough
+
+
+def print_task_list(tasks_remaining):
+    """
+    prints the remaining tasks on the list
+    :param tasks_remaining:the list given
+    :param tasks_completed: the number of completed tasks in the list
+    :return: nothing
+    """
+    task_index = 0
+    for i in range(len(tasks_remaining)):
+        if tasks_remaining[i]:
+            task_index += 1
+            print("%d - " % (task_index) + BAKING_TASKS[i])
+
+
+def is_valid_string(index, tasks):
+    """
+    Validates that the variable given is in the list
+    :param index: any variable given
+    :param tasks: any given list of items
+    :return: true if the variable is in the list, all else false
+    """
+    for i in range(len(tasks)):
+        if tasks[i] == index:
+            return True
+    return False
+
+
+def is_valid_num(num):
+    """
+    Determines if the integer is positive or negative or zero
+    :param num: An integer
+    :return: true for positive, false for zero or below
+    """
+    if num > 0:
+        return True
+    return False
+
+
+def bake():
+    """
+    
+    :return:
+    """
+    tasks_remaining = [True, True, True, True]
+    completed_tasks = 0
+    
+    while completed_tasks < NUM_OF_ALL_TASKS:
+        print_task_list(tasks_remaining)
+        task_num = int(input("What action would you like to cross off your list next?"))
+        if task_num != 1 and completed_tasks == 0:
+            print("We should really start the baguette dough first!")
+        elif completed_tasks != (len(BAKING_TASKS) - 1) and task_num == (len(BAKING_TASKS) - completed_tasks):
+            print("Whoa, we should probably do everything else first!")
+        else:
+            if tasks_remaining[((task_num - 1) + completed_tasks)]:
+                tasks_remaining[((task_num - 1) + completed_tasks)] = False
+            else:
+                tasks_remaining[task_num] = False
+            completed_tasks += 1
+            
+    print("All done!  Let's hope we've PRUEven ourselves worthy.")
+
+
+if __name__ == '__main__':
+    prompt_user()
+    cart = go_shopping()
+    if cart:
+        if check_items_enough(cart):
+            print("We have everything we need!  Ready!  Set!  Bake!")
+            bake()
